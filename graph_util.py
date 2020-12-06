@@ -1,5 +1,8 @@
 import matplotlib.pyplot as plt
 from pandas.plotting import register_matplotlib_converters
+
+import constant_variables
+
 register_matplotlib_converters()
 
 
@@ -11,8 +14,7 @@ def plot_graph_single_dataset(dataset, title, xlabel, ylabel):
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
     plt.plot(dataset)
-    plt.show()
-    plt.show(block=False)
+    plt.savefig("output/"+title+" - "+constant_variables.START_DATE+" -- "+constant_variables.END_DATE+".png")
 
 def plot_graph_original_predicted(dataset, title, xlabel, ylabel, company_close_price, predictions):
     # Plot the graph of original Prices
@@ -25,4 +27,4 @@ def plot_graph_original_predicted(dataset, title, xlabel, ylabel, company_close_
     plt.plot(company_close_price)
     plt.plot(valid[["Close", "Predictions"]])
     plt.legend(["Original_train", "Valid_test", "Predictions"])
-    plt.show()
+    plt.savefig("output/" + title + " - " + constant_variables.START_DATE + " -- " + constant_variables.END_DATE + ".png")
