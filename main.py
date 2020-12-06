@@ -6,6 +6,7 @@ from sklearn.neighbors import KNeighborsRegressor
 from sklearn.preprocessing import MinMaxScaler
 from keras.models import Sequential
 from keras.layers import Dense, LSTM
+from statsmodels.tsa.arima_model import ARIMA
 
 import constant_variables
 import graph_util
@@ -37,7 +38,7 @@ company_close_price["Prediction"] = company_close_price[["Close"]]
 test_data_size = int(len(dataset) * constant_variables.TEST_DATA_SIZE)
 train_data_size = len(dataset) - test_data_size;
 
-#Split on sequence of train and test data.
+#Split on sequence of tsrain and test data.
 x = company_close_price[:train_data_size]
 y = company_close_price[train_data_size:]
 
@@ -113,3 +114,29 @@ predictions = scaler.inverse_transform(predictions)#Undo scaling
 
 graph_util.plot_graph_original_predicted(dataset[-len(x_test):], "Apple's Stock Price Prediction Model - [LSTM]",
                                          "Years", "Close Price", company_close_price["Close"], predictions)
+
+
+#ARIMA,
+
+train_data = company_close_price['Close'][:training_data_len].values
+testing_data = company_close_price['Close'][training_data_len:].values
+
+history_observations = [x for x in train_data]
+model_predictions = []
+N_test_observations = len(testing_data)
+
+# ARIMA model parameters set as p=4, d=1, q=0
+count = 0
+for time_point in range(N_test_observations):
+    model = ARIMA(history_observations, order=( 5, 1, 0))
+    model_fit = model.fit(disp=0)
+    output = model_fit.forecast()
+    yhat = output[0]
+    model_predictions.append(yhat)
+    true_test_value = testing_data[time_point]
+    history_observations.append(true_test_value)
+    count += 1
+    print("........",count)
+
+graph_util.plot_graph_original_predicted(dataset[-len(testing_data):], "Apple's Stock Price Prediction Model - [ARIMA]",
+                                         "Years", "Close Price", company_close_price["Close"], model_predictions)
