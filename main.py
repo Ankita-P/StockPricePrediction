@@ -18,7 +18,7 @@ dataset.index = dataset['Date']
 #Filter data from date:
 dataset = dataset[(dataset['Date'] > constant_variables.START_DATE) & (dataset['Date'] < constant_variables.END_DATE)]
 
-graph_util.plot_graph_single_dataset(dataset["Close"], "Microsoft's Stock Price", "Year", "Close Price USD ($)")
+graph_util.plot_graph_single_dataset(dataset["Close"], constant_variables.STOCK_SYMBL+"'s Stock Price", "Year", "Close Price USD ($)")
 
 #Consider Close prices for training
 company_close_price = dataset[["Close"]]
@@ -56,7 +56,7 @@ print(future_prices)
 linear = LinearRegression().fit(x_train, y_train)
 linear_prediction = linear.predict(future_prices)
 print("Linear regression Prediction =",linear_prediction)
-graph_util.plot_graph_original_predicted(dataset[-len(x_test):], "Apple's Stock Price Prediction Model - [Linear Regression Model]",
+graph_util.plot_graph_original_predicted(dataset[-len(x_test):], constant_variables.STOCK_SYMBL+"'s Stock Price Prediction Model - [Linear Regression Model]",
                                          "Years", "Close Price", company_close_price["Close"], linear_prediction)
 
 
@@ -64,7 +64,7 @@ graph_util.plot_graph_original_predicted(dataset[-len(x_test):], "Apple's Stock 
 knn = KNeighborsRegressor().fit(x_train, y_train)
 knn_prediction = knn.predict(future_prices)
 print("K-nearest neighbour Prediction =",knn_prediction)
-graph_util.plot_graph_original_predicted(dataset[-len(x_test):], "Apple's Stock Price Prediction Model - [Knn Model]",
+graph_util.plot_graph_original_predicted(dataset[-len(x_test):], constant_variables.STOCK_SYMBL+"'s Stock Price Prediction Model - [Knn Model]",
                                          "Years", "Close Price", company_close_price["Close"], knn_prediction)
 
 
@@ -112,7 +112,7 @@ x_test = np.reshape(x_test, (x_test.shape[0],x_test.shape[1],1))
 predictions = model.predict(x_test)
 predictions = scaler.inverse_transform(predictions)#Undo scaling
 
-graph_util.plot_graph_original_predicted(dataset[-len(x_test):], "Apple's Stock Price Prediction Model - [LSTM]",
+graph_util.plot_graph_original_predicted(dataset[-len(x_test):], constant_variables.STOCK_SYMBL+"'s Stock Price Prediction Model - [LSTM]",
                                          "Years", "Close Price", company_close_price["Close"], predictions)
 
 
@@ -138,5 +138,5 @@ for time_point in range(N_test_observations):
     count += 1
     print("........",count)
 
-graph_util.plot_graph_original_predicted(dataset[-len(testing_data):], "Apple's Stock Price Prediction Model - [ARIMA]",
+graph_util.plot_graph_original_predicted(dataset[-len(testing_data):], constant_variables.STOCK_SYMBL+"'s Stock Price Prediction Model - [ARIMA]",
                                          "Years", "Close Price", company_close_price["Close"], model_predictions)
