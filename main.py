@@ -85,6 +85,7 @@ graph_util.plot_graph_original_predicted(dataset[-len(x_test):], constant_variab
 
 
 #LSTM
+# Scale the all of the data to be values between 0 and 1
 scaler = MinMaxScaler(feature_range=(0, 1))
 data = dataset.filter(["Close"])
 data.reset_index()
@@ -92,7 +93,10 @@ scaled_data = scaler.fit_transform(data)
 
 training_data_len = len(x_train)
 
+# Create the scaled training data set
 train_data = scaled_data[0:training_data_len]
+
+#Split the data into x_train and y_train data sets
 x_train=[]
 y_train = []
 for i in range(60, len(train_data)):
@@ -100,8 +104,11 @@ for i in range(60, len(train_data)):
     y_train.append(train_data[i, 0])
 
 x_train, y_train = np.array(x_train), np.array(y_train)
+
+# Reshape the data into the shape accepted by the LSTM
 x_train = np.reshape(x_train, (x_train.shape[0],x_train.shape[1],1))
 
+#Build the LSTM model
 model = Sequential()
 model.add(LSTM(units=50, return_sequences=True,input_shape=(x_train.shape[1],1)))
 model.add(LSTM(units=50, return_sequences=False))
@@ -140,10 +147,10 @@ history_observations = [x for x in train_data]
 model_predictions = []
 N_test_observations = len(testing_data)
 
-# ARIMA model parameters set as p=4, d=1, q=0
+# ARIMA model parameters set as p=5, d=1, q=0
 count = 0
 for time_point in range(N_test_observations):
-    model = ARIMA(history_observations, order=( 5, 1, 0))
+    model = ARIMA(history_observations, order=(5, 1, 0))
     model_fit = model.fit(disp=0)
     output = model_fit.forecast()
     yhat = output[0]
