@@ -177,4 +177,4 @@ print("KNN rmse : ",metrics.mean_squared_error(company_close_price['Close'][trai
 print("LSTM rmse : ",metrics.mean_squared_error(company_close_price['Close'][train_data_size:], lstm_predictions, squared=False))
 print("ARIMA rmse : ",metrics.mean_squared_error(company_close_price['Close'][train_data_size:], model_predictions, squared=False))
 
-output_val.to_csv("data/"+constant_variables.STOCK_SYMBL+"_output.csv")
+output_val.to_csv("output/data/"+constant_variables.STOCK_SYMBL+"_output.csv")
