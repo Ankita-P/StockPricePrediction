@@ -1,4 +1,4 @@
-#Stock Price Prediction using Machine Learning methods
+# Stock Price Prediction using Machine Learning methods
 
 ### Project Members
 
