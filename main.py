@@ -44,7 +44,7 @@ company_close_price["Prediction"] = company_close_price[["Close"]]
 #Identify the length of the train and test data
 #read the test size from config file
 test_data_size = int(len(dataset) * constant_variables.TEST_DATA_SIZE)
-train_data_size = len(dataset) - test_data_size;
+train_data_size = len(dataset) - test_data_size
 
 #Split on sequence of tsrain and test data.
 x = company_close_price[:train_data_size]
@@ -85,23 +85,28 @@ graph_util.plot_graph_original_predicted(dataset[-len(x_test):], constant_variab
 
 
 #LSTM
+# Scale the all of the data to be values between 0 and 1
 scaler = MinMaxScaler(feature_range=(0, 1))
 data = dataset.filter(["Close"])
 data.reset_index()
 scaled_data = scaler.fit_transform(data)
 
 training_data_len = len(x_train)
-
+# Create the scaled training data set
 train_data = scaled_data[0:training_data_len]
+
+#Split the data into x_train and y_train data sets
 x_train=[]
 y_train = []
 for i in range(60, len(train_data)):
     x_train.append(train_data[i-60:i, 0])
     y_train.append(train_data[i, 0])
 
+# Reshape the data into the shape accepted by the LSTM
 x_train, y_train = np.array(x_train), np.array(y_train)
 x_train = np.reshape(x_train, (x_train.shape[0],x_train.shape[1],1))
 
+#Build the LSTM model
 model = Sequential()
 model.add(LSTM(units=50, return_sequences=True,input_shape=(x_train.shape[1],1)))
 model.add(LSTM(units=50, return_sequences=False))
@@ -140,7 +145,7 @@ history_observations = [x for x in train_data]
 model_predictions = []
 N_test_observations = len(testing_data)
 
-# ARIMA model parameters set as p=4, d=1, q=0
+# ARIMA model parameters set as p=5, d=1, q=0
 count = 0
 for time_point in range(N_test_observations):
     model = ARIMA(history_observations, order=( 5, 1, 0))
@@ -156,6 +161,7 @@ for time_point in range(N_test_observations):
 graph_util.plot_graph_original_predicted(dataset[-len(testing_data):], constant_variables.STOCK_SYMBL+"'s Stock Price Prediction Model - [ARIMA]",
                                          "Years", "Close Price", company_close_price["Close"], model_predictions)
 
+#create dataframe for output.
 output_val = pd.DataFrame(company_close_price[train_data_size:])
 output_val.drop(["Prediction"], axis=1, inplace=True)
 output_val["LINEAR_REGRESSION"] = linear_prediction
@@ -165,9 +171,11 @@ output_val["ARIMA"] = model_predictions
 
 print(constant_variables.STOCK_SYMBL)
 
+#Calculate RMSE values
 print("Linear regression rmse : ", metrics.mean_squared_error(company_close_price['Close'][train_data_size:], linear_prediction, squared=False))
 print("KNN rmse : ",metrics.mean_squared_error(company_close_price['Close'][train_data_size:], knn_prediction, squared=False))
 print("LSTM rmse : ",metrics.mean_squared_error(company_close_price['Close'][train_data_size:], lstm_predictions, squared=False))
 print("ARIMA rmse : ",metrics.mean_squared_error(company_close_price['Close'][train_data_size:], model_predictions, squared=False))
 
+#Store the values tto the output file
 output_val.to_csv("data/"+constant_variables.STOCK_SYMBL+"_output.csv")
