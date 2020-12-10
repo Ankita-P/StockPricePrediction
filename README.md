@@ -10,8 +10,8 @@
 
 ### Code 
   - There are 4 files
-    - constant_variables.py -> constant vaiables
-    - graph_util.py -> defs to plot graph
+    - constant_variables.py -> constant variables
+    - graph_util.py -> defs to plot graphs
     - main.py -> contains the implementation of all the 4 models
     - requirements.txt -> all the required dependencies (libraries)
   - [GitHub Link](https://github.com/Ankita-P/StockPricePrediction)
