@@ -55,6 +55,10 @@ print(future_prices)
 #Linear regression
 linear = LinearRegression().fit(x_train, y_train)
 linear_prediction = linear.predict(future_prices)
+
+rms=np.sqrt(np.mean(np.power((np.array(y_test)-np.array(linear_prediction)),2)))
+print("Linear Regression RMSE : ",rms)
+
 print("Linear regression Prediction =",linear_prediction)
 graph_util.plot_graph_original_predicted(dataset[-len(x_test):], constant_variables.STOCK_SYMBL+"'s Stock Price Prediction Model - [Linear Regression Model]",
                                          "Years", "Close Price", company_close_price["Close"], linear_prediction)
@@ -63,6 +67,10 @@ graph_util.plot_graph_original_predicted(dataset[-len(x_test):], constant_variab
 #K - nearest neighbour Confidence
 knn = KNeighborsRegressor().fit(x_train, y_train)
 knn_prediction = knn.predict(future_prices)
+
+rms=np.sqrt(np.mean(np.power((np.array(y_test)-np.array(knn_prediction)),2)))
+print("K-nearest neighbour RMSE : ",rms)
+
 print("K-nearest neighbour Prediction =",knn_prediction)
 graph_util.plot_graph_original_predicted(dataset[-len(x_test):], constant_variables.STOCK_SYMBL+"'s Stock Price Prediction Model - [Knn Model]",
                                          "Years", "Close Price", company_close_price["Close"], knn_prediction)
@@ -112,12 +120,14 @@ x_test = np.reshape(x_test, (x_test.shape[0],x_test.shape[1],1))
 predictions = model.predict(x_test)
 predictions = scaler.inverse_transform(predictions)#Undo scaling
 
+rms=np.sqrt(np.mean(np.power((np.array(y_test['Close'])-np.array(predictions)),2)))
+print("LSTM RMSE : ",rms)
+
 graph_util.plot_graph_original_predicted(dataset[-len(x_test):], constant_variables.STOCK_SYMBL+"'s Stock Price Prediction Model - [LSTM]",
                                          "Years", "Close Price", company_close_price["Close"], predictions)
 
 
 #ARIMA,
-
 train_data = company_close_price['Close'][:training_data_len].values
 testing_data = company_close_price['Close'][training_data_len:].values
 
@@ -137,6 +147,11 @@ for time_point in range(N_test_observations):
     history_observations.append(true_test_value)
     count += 1
     print("........",count)
+
+
+rms=np.sqrt(np.mean(np.power((np.array(testing_data)-np.array(model_predictions)),2)))
+print("ARIMA RMSE : ",rms)
+
 
 graph_util.plot_graph_original_predicted(dataset[-len(testing_data):], constant_variables.STOCK_SYMBL+"'s Stock Price Prediction Model - [ARIMA]",
                                          "Years", "Close Price", company_close_price["Close"], model_predictions)
