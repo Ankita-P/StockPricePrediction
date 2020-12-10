@@ -7,7 +7,7 @@
   4200_project_report.pdf
 
 ### Code 
-  - There 4 python code files
+  - There are 4 files
     - constant_variables.py -> constant vaiables
     - graph_util.py -> defs to plot graph
     - main.py -> contains the implementation of all the 4 models
