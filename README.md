@@ -17,7 +17,7 @@
   - [GitHub Link](https://github.com/Ankita-P/StockPricePrediction)
 
 ### Data
-  - Input data(historical stock price) for the Program in stored in data folder, for below stock symbols
+  - Input data(historical stock price) for the Program is stored in the data folder, for below stock symbols
     - [MakeMyTrip Limited (MMYT)](https://github.com/Ankita-P/StockPricePrediction/blob/master/data/MMYT.csv)
     - [Apple Inc. (AAPL)](https://github.com/Ankita-P/StockPricePrediction/blob/master/data/AAPL.csv)
     - [Tesla, Inc. (TSLA)](https://github.com/Ankita-P/StockPricePrediction/blob/master/data/TSLA.csv)
